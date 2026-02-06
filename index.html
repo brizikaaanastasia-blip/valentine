@@ -1,0 +1,487 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sosi moj hui 💘</title>
+  <style>
+    :root{
+      --bg1:#ffdde8;
+      --bg2:#fff1f6;
+      --card:#ffffffcc;
+      --text:#2b2b2b;
+      --pink:#ff4d88;
+      --pink2:#ff7fb0;
+      --shadow: 0 18px 50px rgba(0,0,0,.12);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color:var(--text);
+      min-height:100vh;
+      display:grid;
+      place-items:center;
+      background: radial-gradient(1200px 700px at 20% 20%, var(--bg2), transparent),
+                  radial-gradient(1200px 700px at 80% 80%, var(--bg1), transparent),
+                  linear-gradient(135deg, #fff, #ffe6f0);
+      overflow:hidden;
+    }
+
+    /* фоновая анимация сердечек */
+    .float-hearts{
+      position:fixed; inset:0; pointer-events:none; opacity:.35;
+      background:
+        radial-gradient(circle at 15% 35%, rgba(255,77,136,.25) 0 3px, transparent 4px),
+        radial-gradient(circle at 75% 20%, rgba(255,77,136,.25) 0 3px, transparent 4px),
+        radial-gradient(circle at 35% 80%, rgba(255,127,176,.25) 0 4px, transparent 5px),
+        radial-gradient(circle at 90% 65%, rgba(255,127,176,.25) 0 3px, transparent 4px);
+      filter: blur(.2px);
+      animation: drift 9s ease-in-out infinite alternate;
+    }
+    @keyframes drift{
+      from{transform: translateY(0px)}
+      to{transform: translateY(-18px)}
+    }
+
+    .card{
+      width:min(520px, 92vw);
+      background:var(--card);
+      backdrop-filter: blur(10px);
+      border:1px solid rgba(255,255,255,.7);
+      border-radius:22px;
+      box-shadow: var(--shadow);
+      padding:22px 20px 18px;
+      position:relative;
+    }
+
+    .title{
+      margin:0 0 6px;
+      font-size:22px;
+      font-weight:800;
+      letter-spacing:.2px;
+      text-align:center;
+    }
+    .subtitle{
+      margin:0 0 16px;
+      text-align:center;
+      opacity:.8;
+      font-size:14px;
+    }
+
+    .sticker{
+      display:grid;
+      place-items:center;
+      font-size:64px;
+      height:90px;
+      margin: 6px 0 10px;
+      user-select:none;
+    }
+    .sticker img{
+      max-height:90px;
+      max-width:90px;
+      object-fit:contain;
+    }
+
+    .question{
+      text-align:center;
+      font-size:20px;
+      font-weight:750;
+      margin: 8px 0 14px;
+    }
+
+    .row{
+      display:flex;
+      gap:10px;
+      justify-content:center;
+      flex-wrap:wrap;
+      margin-bottom:10px;
+    }
+
+    button{
+      border:0;
+      border-radius:14px;
+      padding:12px 16px;
+      font-size:16px;
+      font-weight:700;
+      cursor:pointer;
+      transition: transform .08s ease, filter .15s ease;
+      min-width: 150px;
+    }
+    button:active{ transform: scale(.98); }
+    .btn-yes{
+      background: linear-gradient(135deg, var(--pink), var(--pink2));
+      color:white;
+      box-shadow: 0 10px 22px rgba(255,77,136,.25);
+    }
+    .btn-no{
+      background: #1f1f1f;
+      color:white;
+      opacity:.9;
+    }
+    .btn-soft{
+      background: #ffffff;
+      border:1px solid rgba(0,0,0,.08);
+    }
+
+    .shake{
+      animation: shake .35s ease-in-out 1;
+    }
+    @keyframes shake{
+      0%{transform: translateX(0)}
+      25%{transform: translateX(-8px)}
+      50%{transform: translateX(8px)}
+      75%{transform: translateX(-6px)}
+      100%{transform: translateX(0)}
+    }
+
+    .panel{
+      margin-top:12px;
+      padding:12px;
+      border-radius:16px;
+      background: rgba(255,255,255,.75);
+      border:1px solid rgba(0,0,0,.06);
+    }
+
+    .input{
+      width:100%;
+      padding:12px 12px;
+      border-radius:14px;
+      border:1px solid rgba(0,0,0,.12);
+      outline:none;
+      font-size:16px;
+      margin: 8px 0 10px;
+    }
+
+    .note{
+      font-size:13px;
+      opacity:.8;
+      margin:6px 0 0;
+      text-align:center;
+    }
+
+    /* мини-игра */
+    .game{
+      position:relative;
+      height: 260px;
+      overflow:hidden;
+      border-radius:16px;
+      background: radial-gradient(500px 260px at 30% 30%, rgba(255,77,136,.18), transparent),
+                  linear-gradient(180deg, #ffffff, #fff2f8);
+      border:1px solid rgba(0,0,0,.06);
+    }
+    .hud{
+      display:flex;
+      justify-content:space-between;
+      padding:10px 12px;
+      font-weight:700;
+      font-size:14px;
+    }
+    .heart{
+      position:absolute;
+      font-size:30px;
+      cursor:pointer;
+      user-select:none;
+      transform: translate(-50%, -50%);
+      filter: drop-shadow(0 10px 12px rgba(255,77,136,.15));
+      transition: transform .08s ease;
+    }
+    .heart:active{ transform: translate(-50%, -50%) scale(.92); }
+
+    .hidden{ display:none !important; }
+
+    .footer{
+      display:flex;
+      justify-content:center;
+      gap:10px;
+      margin-top:12px;
+      flex-wrap:wrap;
+    }
+
+    .final{
+      text-align:center;
+      font-weight:800;
+      margin:10px 0 0;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="float-hearts"></div>
+
+  <div class="card" id="card">
+    <h1 class="title">Sosi moj hui 💖</h1>
+    <p class="subtitle">Если что, я могу удаленно снести твою учетку 😌</p>
+
+    <div class="sticker" id="sticker">💌</div>
+
+    <div class="question" id="question">Будешь ли ты моим Валентином?</div>
+
+    <div class="row" id="buttonsStage1">
+      <button class="btn-yes" id="yesBtn">Да, моя самая лучшая королева 💖</button>
+      <button class="btn-no" id="noBtn">Нет, я чмо</button>
+    </div>
+
+    <!-- Этап пожелания -->
+    <div class="panel hidden" id="wishPanel">
+      <div style="font-weight:800; text-align:center;">Тогда напиши пожелание на этот день ✨</div>
+      <p class="subtitle">Только я не придумала, как сохранить твой ответ, так что просто отправь и скажи</p>
+      <input class="input" id="wishInput" placeholder="Можно написать, что хочешь"/>
+      <div class="row">
+        <button class="btn-yes" id="wishOkBtn">Отправить 💌</button>
+      </div>
+      <p class="note">Сисюлики писюлики не считаются</p>
+    </div>
+
+    <!-- Этап результат + мини-игра -->
+    <div class="panel hidden" id="resultPanel">
+      <div style="text-align:center; font-weight:900; font-size:18px;">Правильный ответ! 😈</div>
+      <div style="text-align:center; margin-top:6px;">
+        Твоё пожелание: <span id="wishText" style="font-weight:900; color:#fe649c;"></span>
+      </div>
+
+      <div class="final" style="margin-top:12px;">Поймай 3 негра за 10 секунд и мое сердце твое💗</div>
+      <div class="game" id="game">
+        <div class="hud">
+          <div>Поймано: <span id="caught">0</span>/3</div>
+          <div>Время: <span id="time">10</span>с</div>
+        </div>
+      </div>
+
+      <div class="footer">
+        <button class="btn-soft" id="restartBtn">Сначала 🔁</button>
+      </div>
+
+      <div class="final" id="gameMsg"></div>
+    </div>
+
+    <p class="note" id="tinyNote">Подсказка: «Нет» тут работает, любимый</p>
+  </div>
+
+<script>
+  const card = document.getElementById('card');
+  const sticker = document.getElementById('sticker');
+  const question = document.getElementById('question');
+
+  const yesBtn = document.getElementById('yesBtn');
+  const noBtn  = document.getElementById('noBtn');
+  const buttonsStage1 = document.getElementById('buttonsStage1');
+
+  const wishPanel = document.getElementById('wishPanel');
+  const wishInput = document.getElementById('wishInput');
+  const wishOkBtn = document.getElementById('wishOkBtn');
+
+  const resultPanel = document.getElementById('resultPanel');
+  const wishText = document.getElementById('wishText');
+  const restartBtn = document.getElementById('restartBtn');
+
+  // game
+  const game = document.getElementById('game');
+  const caughtEl = document.getElementById('caught');
+  const timeEl = document.getElementById('time');
+  const gameMsg = document.getElementById('gameMsg');
+
+  let noCount = 0;
+
+  function setSticker(content, isImg=false){
+    sticker.innerHTML = '';
+    if(isImg){
+      const img = document.createElement('img');
+      img.src = content;
+      img.alt = 'sticker';
+      sticker.appendChild(img);
+    } else {
+      sticker.textContent = content;
+    }
+  }
+
+  function shake(){
+    card.classList.remove('shake');
+    void card.offsetWidth;
+    card.classList.add('shake');
+  }
+
+  function stage1(){
+    noCount = 0;
+    setSticker('💌');
+    question.textContent = 'Будешь ли ты моим Валентином?';
+    buttonsStage1.classList.remove('hidden');
+    wishPanel.classList.add('hidden');
+    resultPanel.classList.add('hidden');
+    document.getElementById('tinyNote').classList.remove('hidden');
+  }
+
+  function stageWish(){
+    setSticker('😉');
+    question.textContent = 'Нууу тогдааа…';
+    buttonsStage1.classList.add('hidden');
+    wishPanel.classList.remove('hidden');
+    resultPanel.classList.add('hidden');
+    document.getElementById('tinyNote').classList.add('hidden');
+    wishInput.value = '';
+    wishInput.focus();
+  }
+
+  function stageResult(wish){
+    setSticker('💖');
+    question.textContent = 'Ты официально мой Валентин!';
+    wishPanel.classList.add('hidden');
+    resultPanel.classList.remove('hidden');
+    wishText.textContent = wish;
+
+    startGame();
+  }
+
+  noBtn.addEventListener('click', () => {
+    noCount++;
+    shake();
+
+    // “иди нах” стикер: можно заменить на картинку (см. ниже)
+    if(noCount % 2 === 1){
+      setSticker('😤');
+      question.textContent = 'ЭЭЭ… А ну подумай ка ещё раз ';
+    } else {
+      setSticker('😒');
+      question.textContent = 'Нихуя ты резвый';
+    }
+
+    // через секунду возвращаем вопрос
+    setTimeout(() => {
+      setSticker('💌');
+      question.textContent = 'Будешь ли ты моим Валентином, сучка?';
+    }, 2000);
+  });
+
+  yesBtn.addEventListener('click', () => {
+    stageWish();
+  });
+
+  wishOkBtn.addEventListener('click', () => {
+    const wish = wishInput.value.trim();
+    if(!wish){
+      shake();
+      wishInput.focus();
+      wishInput.placeholder = 'Ну хоть что-нибудь, засранец 😠';
+      return;
+    }
+    stageResult(wish);
+  });
+
+  wishInput.addEventListener('keydown', (e) => {
+    if(e.key === 'Enter') wishOkBtn.click();
+  });
+
+  restartBtn.addEventListener('click', () => {
+    stopGame();
+    stage1();
+  });
+
+  // ---------------- MINI GAME ----------------
+  let timer = null;
+  let timeLeft = 10;
+  let caught = 0;
+  let activeHearts = [];
+
+  function rand(min, max){ return Math.floor(Math.random()*(max-min+1))+min; }
+
+  function spawnHeart(){
+    const h = document.createElement('div');
+    h.className = 'heart';
+    h.textContent = Math.random() < 0.25 ? '👩🏿‍🦲' : '👩🏿‍🦱';
+
+    // позиция (с учётом HUD сверху)
+    const rect = game.getBoundingClientRect();
+    const x = rand(24, rect.width - 24);
+    const y = rand(70, rect.height - 24);
+
+    h.style.left = x + 'px';
+    h.style.top  = y + 'px';
+
+    h.addEventListener('click', () => {
+      caught++;
+      caughtEl.textContent = String(caught);
+      h.remove();
+      activeHearts = activeHearts.filter(el => el !== h);
+
+      if(caught >= 3){
+        winGame();
+      }
+    });
+
+    game.appendChild(h);
+    activeHearts.push(h);
+
+    // сердце исчезает само
+    setTimeout(() => {
+      if(h.isConnected){
+        h.remove();
+        activeHearts = activeHearts.filter(el => el !== h);
+      }
+    }, 1400);
+  }
+
+  function startGame(){
+    stopGame();
+    gameMsg.textContent = '';
+    caught = 0;
+    timeLeft = 10;
+    caughtEl.textContent = '0';
+    timeEl.textContent = '10';
+
+    // периодически спавним сердечки
+    const spawnInterval = setInterval(() => {
+      if(timeLeft <= 0 || caught >= 3){
+        clearInterval(spawnInterval);
+        return;
+      }
+      // 1-2 сердечка за раз
+      spawnHeart();
+      if(Math.random() < 0.45) spawnHeart();
+    }, 420);
+
+    timer = setInterval(() => {
+      timeLeft--;
+      timeEl.textContent = String(timeLeft);
+
+      if(timeLeft <= 0){
+        clearInterval(timer);
+        timer = null;
+        loseGame();
+      }
+    }, 1000);
+
+    // сохраним ссылку, чтобы почистить при stopGame
+    timer._spawnInterval = spawnInterval;
+  }
+
+  function clearHearts(){
+    activeHearts.forEach(h => h.remove());
+    activeHearts = [];
+  }
+
+  function stopGame(){
+    if(timer){
+      clearInterval(timer);
+      if(timer._spawnInterval) clearInterval(timer._spawnInterval);
+      timer = null;
+    }
+    clearHearts();
+  }
+
+  function winGame(){
+    stopGame();
+    gameMsg.textContent = 'Победа! Все негры на полях! А еще я люблю тебя ❤️';
+  }
+
+  function loseGame(){
+    stopGame();
+    gameMsg.textContent = 'О нет 😭 Все негры убежали';
+  }
+
+
+  stage1();
+
+
+</script>
+</body>
+</html>
